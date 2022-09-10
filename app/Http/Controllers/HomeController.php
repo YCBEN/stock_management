@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        $products = Product::where('user_id',Auth::user()->id)->orderBy('created_at','DESC')->get();
+  
+        return  view('home',compact('products'));
+        
     }
 }
