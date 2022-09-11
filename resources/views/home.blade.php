@@ -17,9 +17,13 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addmodal">
-           Ajouter
-          </button>
+        
+        <a href="{{ route('home') }}" type="button" class="btn btn-primary" >
+          Acceuil
+        </a>
+      <button type="button" class="btn btn-success ml-5" data-toggle="modal" data-target="#addmodal">
+          Ajouter
+        </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
@@ -91,35 +95,7 @@
         </div>
       </div>
 
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-      <ul class="nav nav-treeview">
-        <li class="nav-item">
-            <a href="pages/charts/chartjs.html" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>ChartJS</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="pages/charts/chartjs.html" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>ChartJS</p>
-            </a>
-          </li>
-      </ul>
-
-      <!-- Sidebar Menu -->
-    
-    <!-- /.sidebar -->
+ 
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
@@ -172,14 +148,18 @@
                         <h3 class="card-title">Tous Les Produits</h3>
         
                         <div class="card-tools">
-                            
+                          <form  action="{{ route('search') }}" method="Post">
+                            @csrf
                           <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+                            
+                            <input type="text" name="search" class="form-control float-right" placeholder="Search">
         
                             <div class="input-group-append">
                               <button type="submit" class="btn btn-default">
                                 <i class="fas fa-search"></i>
                               </button>
+
+                            </form>
                             </div>
                           </div>
                         </div>
@@ -216,13 +196,15 @@
                                 <td>
                                     <div class="btn-group-vertical">
                                      
-                                        <a href="{{url('product.edit'.$product->id)}} "type="button"  class="btn btn-success mb-1" data-toggle="modal" data-target="#editmodal">
+                                        <a href="{{url('product',$product->id)}} "type="button"  class="btn btn-success mb-1" >
                                             Afficher
                                         </a>
 
-                                        <a href="product/{{ $product->id }}/edit" type="button"  class="btn btn-primary mb-3" >
+                                        <a href="product/{{ $product->id }}/edit" type="button"  class="btn btn-primary mb-1" >
                                             Modifier
                                         </a>
+
+                                        
 
                                        
 
@@ -230,7 +212,7 @@
                                             @csrf
                                             @method('DELETE')
 
-                                                <button type="submit" class="btn btn-danger mt-3" >
+                                                <button onclick="return confirm('Etes vous sure de vouloir supprimer le {{ $product->titre}}')" type="submit" class="btn btn-danger mt-3" >
                                                     Supprimer
                                                 </button>
                                            </form>

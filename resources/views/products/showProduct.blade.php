@@ -96,6 +96,9 @@
       </div>
 
 
+   
+
+
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
@@ -137,12 +140,11 @@
                           </div>
                           <!-- /.user-block -->
                           <div class="card-tools">
-                            <a href="{{ route('home') }}" type="button" class="btn btn-danger" >
-                                Annuler
-                              </button></a>
-                            <button type="submit" class="btn btn-success" >
-                              sauvegarder
-                            </button>
+                     
+                            <a href="{{ route('product.edit',$product->id) }}" type="button"  class="btn btn-primary mb-1 mr-5" >
+                                Modifier
+                            </a>
+
                           
                           </div>
                           <!-- /.card-tools -->
@@ -150,34 +152,31 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                            
-                            <div>
-                                <label for="image_path" class="form-label">Modifier l'image</label>
-                                <input name="image_path" value="{{$product->image_path}}" type="file"   class="form-control form-control-lg" id="image_path"  >
-                            </div>
+                            
                           <img class="img-fluid pad" src="{{ asset('images/'.$product->image_path) }}" alt="Photo"/>
           
                           <hr>
 
                             <div class="mb-3">
                                 <label for="exampleInputEmail1" class="form-label">Titre:</label>
-                                <input type="text"  name="titre"  class="form-control" id="titre" value="{{$product->titre}}"/>
+                                <label  name="titre"  class="form-control" id="titre">{{$product->titre}}</label>
                            
                             </div>
 
                             <div class="mb-3">
                                 <label for="prix_achat" class="form-label">Prix Achat</label>
-                                <input type="number" value="{{ $product->prix_achat}}" name="prix_achat" class="form-control" id="prix_achat" min="0">
+                                <label name="prix_achat" class="form-control" id="prix_achat">{{ $product->prix_achat}}</label>
                                
                               </div>
                             
                               <div class="mb-3">
                                 <label for="prix_vente" class="form-label">Prix Vente</label>
-                                <input type="number" value="{{ $product->prix_vente}}" name="prix_vente" class="form-control" id="prix_vente" min="0">
+                                <label  value="" name="prix_vente" class="form-control" id="prix_vente">{{ $product->prix_vente}}</label>
                                
                               </div>
                               <div class="mb-3">
                                 <label for="quantite" class="form-label">Quantité</label>
-                                <input type="number" value="{{ $product->quantite}}" name="quantite" class="form-control" id="quantite" min="0">
+                                <label type="number" name="quantite" class="form-control" id="quantite">{{ $product->quantite}}</label>
                                
                               </div>
                             

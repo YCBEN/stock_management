@@ -20,9 +20,8 @@ class ProductController extends Controller
 
     
     {
-        $products =Product::all()->sortByDesc("created_at");
-        //dd($products);
-        return  view('products.indexProduct',compact('products'));
+      
+ 
        
     }
 
@@ -42,12 +41,17 @@ class ProductController extends Controller
         
         $request->validate([
             'titre'=>'required|string|max:255   ',
-            'image_path'=>'required|mimes:jpg,png,jpeg|max:5040',
-            'prix_achat'=>'required|numeric',
-            'prix_vente'=>'required|numeric',
-            'quantite'=>'required|numeric',
+            'image_path'=>'required|mimes:jpg,png,jpeg|max:5040', 
+            'prix_achat'=>'required|numeric|max:10000000000|min:0', /* numeric validation ne prend pas en considiration la taille alors
+            on doit specifier la taille max 10000000000 vu que en base de donnees 
+            l attribut est integer et l integer en mysql a un max de 10 chiffres*/
+
+            'prix_vente'=>'required|numeric|min:0', //dans le cas de la validation  numeric sans declaration de taille limit l 'erreur sera elevé par le sgbd comme dans ce cas
+
+
+            'quantite'=>'required|numeric|max:10000000000|min:0', 
            
-            
+           
         ]);
        
         $newImageName = time().'-'.$request->titre .'.'.$request->image_path->extension(); 
@@ -64,7 +68,7 @@ class ProductController extends Controller
             'prix_vente'=> $request->prix_vente,
             'quantite'=> $request->quantite,
         
-            'created_at' => Carbon::now(),
+            'created_at' => Carbon::now(), // on peut avoir la forme qu on veut 
             'user_id'=> Auth::user()->id,
             'image_path'=> $newImageName,   
         ]);
@@ -88,7 +92,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        $product = Product::where('id',$product->id)->first();
+  
+        return  view('products.showProduct',compact('product'));
     }
 
     /**
@@ -117,13 +123,19 @@ class ProductController extends Controller
         
         $request->validate([
             'titre'=>'required|string|max:255   ',
-            'image_path'=>'required|mimes:jpg,png,jpeg|max:5040',
-            'prix_achat'=>'required|numeric',
-            'prix_vente'=>'required|numeric',
-            'quantite'=>'required|numeric',
-           
+            'prix_achat'=>'required|numeric|max:10000000000|min:0',
+            'prix_vente'=>'required|numeric|min:0',
+            'quantite'=>'required|numeric|max:10000000000|min:0', 
             
         ]);
+
+        
+
+        
+
+        if($request->image_path){
+            $request->validate([
+                'image_path'=>'required|mimes:jpg,png,jpeg|max:5040',]);
 
         $oldPath =$product->image_path;
 
@@ -131,6 +143,12 @@ class ProductController extends Controller
         
         $request->image_path->move(public_path('images'), $newImageName);
 
+       
+                
+        }else{
+            $oldPath =$product->image_path;
+            $newImageName = $product->image_path;
+        }
         try{
             
             Product::where('id',$product->id)->update([
@@ -140,10 +158,12 @@ class ProductController extends Controller
             'quantite'=> $request->quantite,
             'image_path'=> $newImageName,   
 
-        ]);
+        ]); 
+
+        if($request->image_path){
         if(File::exists('images/'.$oldPath)) {
             File::delete('images/'.$oldPath);
-        }
+        }} //je veux pas supprimer l'ancienne jusqu'a ce que j'assure         
         
         return   redirect('/home')->with('product_update','Le produit a été mis à jour avec succès');
 
@@ -173,5 +193,13 @@ class ProductController extends Controller
         }else{
             return   redirect('/home')->with('product_update_fail','Le produit n\'a pas pu etre supprimer');
         }
+    }
+
+
+    public function search(Request $request){
+
+        $products = Product::where('titre','LIKE','%'.$request->search.'%')->orderBy('created_at','DESC')->get();
+       
+        return  view('home',compact('products'));
     }
 }

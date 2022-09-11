@@ -27,11 +27,13 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('/', function () {
-        return view("home");
+        return redirect('/home'); // j'ai fait des changements apres ce lien  est resté libre j'allais changer /home avec mais ca provoque beaucoup de changement alors j'ai prefere cette solution
     });
 
     Route::get('/email',function(){
         return new mailUsage();
     });
+
+    Route::Post('/search',[ ProductController::class, 'search'])->name('search');
 
 });

@@ -27,7 +27,7 @@ class HomeController extends Controller
 
         $products = Product::where('user_id',Auth::user()->id)->orderBy('created_at','DESC')->get();
   
-        return  view('home',compact('products'));
+        return  view('home',compact('products'));   
         
     }
 }
